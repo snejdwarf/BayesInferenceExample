@@ -1,4 +1,0 @@
-
-Create simpel example model with hardcoded cpt
-Do inference and illustrations
-Learn parameters from data/csv/pandas
