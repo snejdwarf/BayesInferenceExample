@@ -17,9 +17,10 @@ def GetParentNames(bn, variable):
 def LearnParameters(bn, df):
     for name in bn.names():
         if len(bn.parents(name)) == 0: # Handle base case for variables with no parents
-            false_frequency = len(df[df[name] == 0]) / total
+            frequency_count_negatives = len(df[df[name] == 0])
+            frequency_count_positives = len(df[df[name] == 1])
+            false_frequency = frequency_count_negatives / (frequency_count_negatives + frequency_count_positives)
             true_frequency = 1 - false_frequency
-            val = [false_frequency, true_frequency]
             bn.cpt(name)[:] = [false_frequency,true_frequency] 
 
         else:
@@ -27,7 +28,6 @@ def LearnParameters(bn, df):
             frequency_count = df[parents + [name]].value_counts().to_frame().reset_index()
             frequency_count_positives = frequency_count[frequency_count[name]==1]
             frequency_count_negatives = frequency_count[frequency_count[name]==0]
-            total = frequency_count['count'].sum()
             for row in frequency_count_positives.iterrows():
                 dict = row[1].to_dict()
                 parent_config = {p: dict[p] for p in parents}
